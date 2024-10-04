@@ -2,9 +2,10 @@ package main
 
 import (
 	"flag"
-	"github.com/run-bigpig/jb-active/internal/bootstrap"
-	"github.com/valyala/fasthttp"
 	"log"
+
+	"github.com/gythialy/jb-helper/internal/bootstrap"
+	"github.com/valyala/fasthttp"
 )
 
 var addr = flag.String("addr", ":10800", "TCP address to listen to")

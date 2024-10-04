@@ -2,9 +2,12 @@ package handler
 
 import (
 	"encoding/json"
-	"github.com/run-bigpig/jb-active/internal/license"
-	"github.com/run-bigpig/jb-active/internal/model"
-	"github.com/run-bigpig/jb-active/internal/response"
+	"maps"
+	"slices"
+
+	"github.com/gythialy/jb-helper/internal/license"
+	"github.com/gythialy/jb-helper/internal/model"
+	"github.com/gythialy/jb-helper/internal/response"
 	"github.com/valyala/fasthttp"
 )
 
@@ -15,6 +18,35 @@ func LicenseHandler(ctx *fasthttp.RequestCtx) {
 		response.Error(ctx, err)
 		return
 	}
+
+	date := licenseReq.Products[0].FallbackDate
+
+	licenseReq.Products = append(licenseReq.Products, model.Product{
+		Code:         "PCWMP",
+		FallbackDate: date,
+		PaidUpTo:     date,
+		Extended:     false,
+	}, model.Product{
+		Code:         "PRR",
+		FallbackDate: date,
+		PaidUpTo:     date,
+		Extended:     false,
+	}, model.Product{
+		Code:         "PRAINBOWBRACKET",
+		FallbackDate: date,
+		PaidUpTo:     date,
+		Extended:     false,
+	})
+
+	// remove duplicate items
+	products := make(map[string]model.Product)
+
+	for _, v := range licenseReq.Products {
+		if _, ok := products[v.Code]; !ok {
+			products[v.Code] = v
+		}
+	}
+	licenseReq.Products = slices.Collect(maps.Values(products))
 	lic, err := license.GenerateLicense(&licenseReq)
 	if err != nil {
 		response.Error(ctx, err)

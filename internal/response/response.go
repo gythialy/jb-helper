@@ -2,8 +2,9 @@ package response
 
 import (
 	"encoding/json"
-	"github.com/valyala/fasthttp"
 	"path/filepath"
+
+	"github.com/valyala/fasthttp"
 )
 
 type ResponseData struct {

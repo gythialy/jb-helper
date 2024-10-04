@@ -3,11 +3,13 @@ package product
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/run-bigpig/jb-active/internal/model"
-	"github.com/run-bigpig/jb-active/internal/utils"
 	"os"
 	"path/filepath"
+	"slices"
 	"sync"
+
+	"github.com/gythialy/jb-helper/internal/model"
+	"github.com/gythialy/jb-helper/internal/utils"
 )
 
 const (
@@ -29,7 +31,7 @@ func init() {
 
 func getIdeList() ([]model.Ide, error) {
 	var response []model.Ide
-	ideApi := fmt.Sprintf("%s?%s", ideBaseUrl, "fields=code,name,description")
+	ideApi := fmt.Sprintf("%s?%s", ideBaseUrl, "fields=code,name,description,salesCode")
 	result, err := utils.SendRequest(ideApi, header, nil)
 	if err != nil {
 		fmt.Println(err)
@@ -40,7 +42,19 @@ func getIdeList() ([]model.Ide, error) {
 		fmt.Println(err)
 		return nil, err
 	}
-	return response, nil
+	filter := slices.Collect(func(yield func(ide model.Ide) bool) {
+		for _, ide := range response {
+			if ide.SalesCode != "" && ide.SalesCode != ide.Code {
+				ide.Code = ide.SalesCode
+			}
+			if ide.SalesCode != "" {
+				if !yield(ide) {
+					return
+				}
+			}
+		}
+	})
+	return filter, nil
 }
 
 func getPaidPluginList() ([]model.Plugin, error) {
@@ -48,7 +62,7 @@ func getPaidPluginList() ([]model.Plugin, error) {
 		response       model.PluginList
 		paidPluginList []model.Plugin
 	)
-	pluginApi := fmt.Sprintf("%s%s", pluginBaseUrl, "/api/searchPlugins?max=10000&offset=0")
+	pluginApi := fmt.Sprintf("%s%s", pluginBaseUrl, "/api/searchPlugins?max=10000&offset=0&pricingModels=PAID")
 	result, err := utils.SendRequest(pluginApi, header, nil)
 	if err != nil {
 		fmt.Println(err)
@@ -59,11 +73,11 @@ func getPaidPluginList() ([]model.Plugin, error) {
 		fmt.Println(err)
 		return nil, err
 	}
-	for _, plugin := range response.Plugins {
-		if plugin.PricingModel == "PAID" {
-			plugin.Icon = fmt.Sprintf("%s%s", pluginBaseUrl, plugin.Icon)
-			paidPluginList = append(paidPluginList, plugin)
-		}
+
+	paidPluginList = make([]model.Plugin, len(response.Plugins))
+	for i, plugin := range response.Plugins {
+		plugin.Icon = fmt.Sprintf("%s%s", pluginBaseUrl, plugin.Icon)
+		paidPluginList[i] = plugin
 	}
 	return paidPluginList, nil
 }
@@ -114,7 +128,7 @@ func savePlugin() error {
 		}(plugin)
 	}
 	wg.Wait()
-	//填满信号量 保证所有goroutine执行完毕
+	// 填满信号量 保证所有goroutine执行完毕
 	for i := 0; i < cap(sem); i++ {
 		sem <- struct{}{}
 	}
@@ -122,7 +136,7 @@ func savePlugin() error {
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(filepath.Join(utils.GetStaticPath(), "json", pluginName), jsonData, 0666)
+	return os.WriteFile(filepath.Join(utils.JsonPath(), pluginName), jsonData, 0o666)
 }
 
 func saveIde() error {
@@ -134,7 +148,7 @@ func saveIde() error {
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(filepath.Join(utils.GetStaticPath(), "json", ideName), jsonData, 0666)
+	return os.WriteFile(filepath.Join(utils.JsonPath(), ideName), jsonData, 0o666)
 }
 
 func SyncProduct() error {

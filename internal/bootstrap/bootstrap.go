@@ -2,24 +2,24 @@ package bootstrap
 
 import (
 	"github.com/fasthttp/router"
-	"github.com/run-bigpig/jb-active/internal/cert"
-	"github.com/run-bigpig/jb-active/internal/power"
-	"github.com/run-bigpig/jb-active/internal/product"
-	router2 "github.com/run-bigpig/jb-active/internal/router"
-	"github.com/run-bigpig/jb-active/internal/utils"
+	"github.com/gythialy/jb-helper/internal/cert"
+	"github.com/gythialy/jb-helper/internal/power"
+	"github.com/gythialy/jb-helper/internal/product"
+	router2 "github.com/gythialy/jb-helper/internal/router"
+	"github.com/gythialy/jb-helper/internal/utils"
 	"log"
-	"os"
-	"path/filepath"
 )
 
 func Run() *router.Router {
 	log.Println("正在创建相关目录")
-	err := createDir()
+	err := createDirs()
 	if err != nil {
 		panic(err)
 	}
-	log.Println("正在生成证书")
-	err = cert.CreateCert()
+	if utils.IsDirEmpty(utils.CertPath()) {
+		log.Println("正在生成证书")
+		err = cert.CreateCert()
+	}
 	if err != nil {
 		panic(err)
 	}
@@ -38,19 +38,16 @@ func Run() *router.Router {
 }
 
 // 创建目录
-func createDir() error {
-	certDir := filepath.Join(utils.GetCurrentPath(), "cert")
-	jsonDir := filepath.Join(utils.GetStaticPath(), "json")
-	confDir := filepath.Join(utils.GetStaticPath(), "conf")
-	err := os.MkdirAll(certDir, 0755)
+func createDirs() error {
+	err := utils.CreateDir(utils.CertPath())
 	if err != nil {
 		return err
 	}
-	err = os.MkdirAll(jsonDir, 0755)
+	err = utils.CreateDir(utils.JsonPath())
 	if err != nil {
 		return err
 	}
-	err = os.MkdirAll(confDir, 0755)
+	err = utils.CreateDir(utils.ConfigPath())
 	if err != nil {
 		return err
 	}

@@ -3,9 +3,9 @@
 <head>
     <meta charset="utf-8">
     <title>JetBrains 激活码生成</title>
-    <meta name="renderer" content="webkit">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="webkit" name="renderer">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
     <link href="/css/layui.css" rel="stylesheet">
     <link href="/css/index.css" rel="stylesheet">
 </head>
@@ -23,23 +23,23 @@
                             <div class="layui-form-item">
                                 <label class="layui-form-label">许可证</label>
                                 <div class="layui-input-block">
-                                    <input type="text" name="licenseeName" value="" lay-verify="required"
-                                           placeholder="许可证名称" lay-reqtext="请输入许可证名称" autocomplete="off"
-                                           class="layui-input" lay-affix="clear">
+                                    <input autocomplete="off" class="layui-input" lay-affix="clear" lay-reqtext="请输入许可证名称"
+                                           lay-verify="required" name="licenseeName" placeholder="许可证名称"
+                                           type="text" value="">
                                 </div>
                             </div>
                             <div class="layui-form-item">
                                 <label class="layui-form-label">授权名</label>
                                 <div class="layui-input-block">
-                                    <input type="text" name="assigneeName" value="" lay-verify="required"
-                                           placeholder="被授权者名称" lay-reqtext="请填写被授权者名称"
-                                           autocomplete="off" class="layui-input" lay-affix="clear">
+                                    <input autocomplete="off" class="layui-input" lay-affix="clear" lay-reqtext="请填写被授权者名称"
+                                           lay-verify="required" name="assigneeName"
+                                           placeholder="被授权者名称" type="text" value="">
                                 </div>
                             </div>
                             <div class="layui-form-item">
                                 <label class="layui-form-label">IDE名称</label>
                                 <div class="layui-input-block">
-                                    <select name="ideCode" lay-filter="ideCode" lay-search="">
+                                    <select lay-filter="ideCode" lay-search="" name="ideCode">
 
                                     </select>
                                 </div>
@@ -53,11 +53,15 @@
                             <div class="layui-form-item">
                                 <label class="layui-form-label">过期时间</label>
                                 <div class="layui-input-block">
-                                    <input type="text"  lay-affix="clear"  placeholder="过期时间不建议超过2026年" name="expireDate"  lay-verify="required"  lay-reqtext="请填写过期时间" class="layui-input" id="expireDate" placeholder="yyyy-MM-dd">
+                                    <input class="layui-input" id="expireDate" lay-affix="clear"
+                                           lay-reqtext="请填写过期时间" lay-verify="required" name="expireDate"
+                                           placeholder="过期时间不建议超过2026年" placeholder="yyyy-MM-dd" type="text">
                                 </div>
                             </div>
                             <div class="layui-form-item">
-                                <button class="layui-btn layui-btn-fluid layui-btn-red" lay-submit  lay-filter="generate">生成</button>
+                                <button class="layui-btn layui-btn-fluid layui-btn-red" lay-filter="generate"
+                                        lay-submit>生成
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -66,7 +70,7 @@
         </div>
     </div>
 </div>
-<script type="text/html" id="result">
+<script id="result" type="text/html">
     <div class="layui-card">
         <div class="layui-card-body">
             <div class="layui-card-header">power.conf</div>
@@ -157,12 +161,12 @@
             })
         })
 
-        form.on('submit(generate)',function (data){
+        form.on('submit(generate)', function (data) {
             var filed = data.field;
             var pluginList = transfer.getData('pluginList');
-            var product = [{code:filed.ideCode,fallbackDate:filed.expireDate,paidUpTo:filed.expireDate}];
+            var product = [{code: filed.ideCode, fallbackDate: filed.expireDate, paidUpTo: filed.expireDate}];
             for (var i in pluginList) {
-                product.push({code:pluginList[i].value,fallbackDate:filed.expireDate,paidUpTo:filed.expireDate})
+                product.push({code: pluginList[i].value, fallbackDate: filed.expireDate, paidUpTo: filed.expireDate})
             }
             postCommonObj.licenseeName = filed.licenseeName;
             postCommonObj.assigneeName = filed.assigneeName;
@@ -190,35 +194,35 @@
                     $(layero).children('.layui-layer-content').css('overflow', 'visible');
                     layui.code({
                         elem: '.powerconf',
-                        preview:false,
+                        preview: false,
                         code: power,
                         text: {
                             title: 'power.conf',
                             preview: 'power.conf'
                         },
-                        wordWrap:false,
-                        header:true,
+                        wordWrap: false,
+                        header: true,
                         theme: 'dark',
                     });
                     layui.code({
                         elem: '.vmoption',
-                        preview:false,
+                        preview: false,
                         text: {
                             title: '虚拟机配置',
                         },
-                        header:true,
+                        header: true,
                         theme: 'dark',
                     });
                     layui.code({
                         elem: '.license',
-                        preview:false,
+                        preview: false,
                         code: res.data.license,
                         text: {
                             title: 'license',
                         },
-                        header:true,
+                        header: true,
                         theme: 'dark',
-                        wordWrap:false,
+                        wordWrap: false,
                     });
                 }
             });

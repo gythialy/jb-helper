@@ -6,8 +6,16 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"path"
 	"path/filepath"
 	"time"
+)
+
+var (
+	staticFolder = "static"
+	jsonFolder   = "json"
+	certFolder   = "cert"
+	configFolder = "conf"
 )
 
 func SendRequest(url string, headers map[string]string, data interface{}) ([]byte, error) {
@@ -35,10 +43,8 @@ func SendRequest(url string, headers map[string]string, data interface{}) ([]byt
 		}
 	}
 	// 设置请求头（如果有）
-	if headers != nil {
-		for k, v := range headers {
-			req.Header.Set(k, v)
-		}
+	for k, v := range headers {
+		req.Header.Set(k, v)
 	}
 
 	resp, err := client.Do(req)
@@ -56,21 +62,53 @@ func SendRequest(url string, headers map[string]string, data interface{}) ([]byt
 
 // GetCurrentPath 获取当前执行文件的路径
 func GetCurrentPath() string {
-	execPath, err := os.Executable()
+	dir, err := os.Getwd()
 	if err != nil {
 		return ""
 	}
-	execPath = filepath.Dir(execPath)
-	return execPath
+	return dir
 }
 
 // GetStaticPath 获取静态文件路径
 func GetStaticPath() string {
-	return filepath.Join(GetCurrentPath(), "static")
+	return filepath.Join(GetCurrentPath(), staticFolder)
 }
 
 // IsExist 判断某个文件是否存在
 func IsExist(filepath string) bool {
 	_, err := os.Stat(filepath)
 	return err == nil || os.IsExist(err)
+}
+
+// IsDirEmpty checks if a directory is empty
+func IsDirEmpty(dirPath string) bool {
+	entries, err := os.ReadDir(dirPath)
+	if err != nil {
+		return false
+	}
+	return len(entries) == 0
+}
+
+// CreateDir create folder if not exist
+func CreateDir(dirPath string) error {
+	// check folder is existing
+	if _, err := os.Stat(dirPath); err != nil {
+		err := os.MkdirAll(dirPath, 0o755)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func JsonPath() string {
+	return path.Join(GetCurrentPath(), staticFolder, jsonFolder)
+}
+
+func CertPath() string {
+	return path.Join(GetCurrentPath(), certFolder)
+}
+
+func ConfigPath() string {
+	return path.Join(GetCurrentPath(), staticFolder, configFolder)
 }

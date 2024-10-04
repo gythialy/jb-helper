@@ -8,11 +8,12 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
-	"github.com/run-bigpig/jb-active/internal/utils"
 	"math/big"
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/gythialy/jb-helper/internal/utils"
 )
 
 const (
@@ -20,8 +21,8 @@ const (
 	OneDay = time.Hour * 24
 	// TenYears represents a time duration of 10 years.
 	TenYears = OneDay * 3650
-	CertPem  = "jb-active.pem"
-	CertKey  = "jb-active.key"
+	certPem  = "jb-active.pem"
+	certKey  = "jb-active.key"
 )
 
 // CreateCert 创建证书
@@ -62,10 +63,10 @@ func CreateCert() error {
 		Type:  "CERTIFICATE",
 		Bytes: derBytes,
 	})
-	if err := writeToFile(filepath.Join(utils.GetCurrentPath(), "cert", CertPem), certPEM); err != nil {
+	if err := writeToFile(filepath.Join(utils.GetCurrentPath(), "cert", certPem), certPEM); err != nil {
 		return err
 	}
-	if err := writeToFile(filepath.Join(utils.GetCurrentPath(), "cert", CertKey), privateKeyPEM); err != nil {
+	if err := writeToFile(filepath.Join(utils.GetCurrentPath(), "cert", certKey), privateKeyPEM); err != nil {
 		return err
 	}
 	return nil
@@ -79,7 +80,7 @@ func encodePrivateKeyToPEM(key *rsa.PrivateKey) []byte {
 }
 
 func writeToFile(filename string, data []byte) error {
-	return os.WriteFile(filename, data, 0644)
+	return os.WriteFile(filename, data, 0o644)
 }
 
 func randomSerialNumber() (*big.Int, error) {
@@ -93,7 +94,7 @@ func randomSerialNumber() (*big.Int, error) {
 
 // ParseCertPem 解析PEM
 func ParseCertPem() (*x509.Certificate, error) {
-	data, err := os.ReadFile(filepath.Join(utils.GetCurrentPath(), "cert", CertPem))
+	data, err := os.ReadFile(filepath.Join(utils.CertPath(), certPem))
 	if err != nil {
 		return nil, err
 	}
@@ -110,7 +111,7 @@ func ParseCertPem() (*x509.Certificate, error) {
 
 // ParseCertKey 解析key
 func ParseCertKey() (*rsa.PrivateKey, error) {
-	data, err := os.ReadFile(filepath.Join(utils.GetCurrentPath(), "cert", CertKey))
+	data, err := os.ReadFile(filepath.Join(utils.CertPath(), certKey))
 	if err != nil {
 		return nil, err
 	}

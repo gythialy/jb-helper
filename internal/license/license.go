@@ -8,9 +8,10 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"github.com/run-bigpig/jb-active/internal/cert"
-	"github.com/run-bigpig/jb-active/internal/model"
 	"math/big"
+
+	"github.com/gythialy/jb-helper/internal/cert"
+	"github.com/gythialy/jb-helper/internal/model"
 )
 
 func generateLicenseID() string {

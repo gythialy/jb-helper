@@ -5,11 +5,12 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
-	"github.com/run-bigpig/jb-active/internal/cert"
-	"github.com/run-bigpig/jb-active/internal/utils"
 	"math/big"
 	"os"
 	"path/filepath"
+
+	"github.com/gythialy/jb-helper/internal/cert"
+	"github.com/gythialy/jb-helper/internal/utils"
 )
 
 func GenerateEqualResult() error {
@@ -31,8 +32,8 @@ func GenerateEqualResult() error {
 	r.Exp(x, big.NewInt(int64(y)), zp.N)
 	equal := fmt.Sprintf("EQUAL,%d,%d,%d->%d", x, y, z, r)
 	powerConf := filepath.Join(utils.GetStaticPath(), "conf", "power.conf")
-	var wirterStr = `[Result]
+	writerStr := `[Result]
 ;active code 
 ` + equal
-	return os.WriteFile(powerConf, []byte(wirterStr), 0644)
+	return os.WriteFile(powerConf, []byte(writerStr), 0o644)
 }

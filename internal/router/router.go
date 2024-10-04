@@ -2,8 +2,8 @@ package router
 
 import (
 	"github.com/fasthttp/router"
-	"github.com/run-bigpig/jb-active/internal/handler"
-	"github.com/run-bigpig/jb-active/internal/utils"
+	"github.com/gythialy/jb-helper/internal/handler"
+	"github.com/gythialy/jb-helper/internal/utils"
 	"github.com/valyala/fasthttp"
 )
 

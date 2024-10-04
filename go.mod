@@ -1,12 +1,15 @@
-module github.com/run-bigpig/jb-active
+module github.com/gythialy/jb-helper
 
-go 1.22.0
+go 1.23
+
+require (
+	github.com/fasthttp/router v1.5.2
+	github.com/valyala/fasthttp v1.56.0
+)
 
 require (
 	github.com/andybalholm/brotli v1.1.0 // indirect
-	github.com/fasthttp/router v1.5.0 // indirect
-	github.com/klauspost/compress v1.17.6 // indirect
-	github.com/savsgio/gotils v0.0.0-20240303185622-093b76447511 // indirect
+	github.com/klauspost/compress v1.17.10 // indirect
+	github.com/savsgio/gotils v0.0.0-20240704082632-aef3928b8a38 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	github.com/valyala/fasthttp v1.52.0 // indirect
 )

@@ -3,6 +3,7 @@ package model
 type Ide struct {
 	Code        string `json:"code"`
 	Name        string `json:"name"`
+	SalesCode   string `json:"salesCode"`
 	Description string `json:"description"`
 }
 

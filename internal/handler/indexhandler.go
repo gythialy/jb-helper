@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/run-bigpig/jb-active/internal/response"
+	"github.com/gythialy/jb-helper/internal/response"
 	"github.com/valyala/fasthttp"
 )
 
