@@ -1,16 +1,19 @@
 package bootstrap
 
 import (
+	"log"
+
 	"github.com/fasthttp/router"
 	"github.com/gythialy/jb-helper/internal/cert"
+	"github.com/gythialy/jb-helper/internal/constant"
 	"github.com/gythialy/jb-helper/internal/power"
 	"github.com/gythialy/jb-helper/internal/product"
 	router2 "github.com/gythialy/jb-helper/internal/router"
 	"github.com/gythialy/jb-helper/internal/utils"
-	"log"
 )
 
 func Run() *router.Router {
+	log.Printf("jb-helper %s @ %s\n", constant.Version, constant.BuildTime)
 	log.Println("正在创建相关目录")
 	err := createDirs()
 	if err != nil {
