@@ -34,7 +34,9 @@ func GenerateLicense(license *model.License) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	license.LicenseID = generateLicenseID()
+	if license.LicenseID == "" {
+		license.LicenseID = generateLicenseID()
+	}
 	licenseStr, _ := json.Marshal(license)
 	hashed := sha1.Sum(licenseStr)
 	signature, _ := rsa.SignPKCS1v15(rand.Reader, privateKey, crypto.SHA1, hashed[:])

@@ -62,11 +62,15 @@ func SendRequest(url string, headers map[string]string, data interface{}) ([]byt
 
 // GetCurrentPath 获取当前执行文件的路径
 func GetCurrentPath() string {
-	dir, err := os.Getwd()
-	if err != nil {
-		return ""
+	path := os.Getenv("BASE_PATH")
+	if path == "" {
+		if dir, err := os.Getwd(); err != nil {
+			return ""
+		} else {
+			return dir
+		}
 	}
-	return dir
+	return path
 }
 
 // GetStaticPath 获取静态文件路径

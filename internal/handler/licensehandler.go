@@ -47,6 +47,8 @@ func LicenseHandler(ctx *fasthttp.RequestCtx) {
 		}
 	}
 	licenseReq.Products = slices.Collect(maps.Values(products))
+	// licenseStr, _ := json.Marshal(licenseReq)
+	// log.Printf("licenseReq: %s\n", licenseStr)
 	lic, err := license.GenerateLicense(&licenseReq)
 	if err != nil {
 		response.Error(ctx, err)

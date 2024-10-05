@@ -20,9 +20,10 @@ const (
 	// OneDay represents a time duration of 1 day.
 	OneDay = time.Hour * 24
 	// TenYears represents a time duration of 10 years.
-	TenYears = OneDay * 3650
-	certPem  = "jb-active.pem"
-	certKey  = "jb-active.key"
+	TenYears     = OneDay * 3650
+	certPem      = "jb-active.pem"
+	certKey      = "jb-active.key"
+	certPKCS8Key = "jb-active-pkcs8.key"
 )
 
 // CreateCert 创建证书
@@ -63,10 +64,15 @@ func CreateCert() error {
 		Type:  "CERTIFICATE",
 		Bytes: derBytes,
 	})
+	privateKeyPKCS8PEM := encodePrivateKeyToPKCS(privateKey)
+
 	if err := writeToFile(filepath.Join(utils.GetCurrentPath(), "cert", certPem), certPEM); err != nil {
 		return err
 	}
 	if err := writeToFile(filepath.Join(utils.GetCurrentPath(), "cert", certKey), privateKeyPEM); err != nil {
+		return err
+	}
+	if err := writeToFile(filepath.Join(utils.GetCurrentPath(), "cert", certPKCS8Key), privateKeyPKCS8PEM); err != nil {
 		return err
 	}
 	return nil
@@ -77,6 +83,16 @@ func encodePrivateKeyToPEM(key *rsa.PrivateKey) []byte {
 		Type:  "RSA PRIVATE KEY",
 		Bytes: x509.MarshalPKCS1PrivateKey(key),
 	})
+}
+
+func encodePrivateKeyToPKCS(key *rsa.PrivateKey) []byte {
+	if privateKey, err := x509.MarshalPKCS8PrivateKey(key); err == nil {
+		return pem.EncodeToMemory(&pem.Block{
+			Type:  "RSA PRIVATE KEY",
+			Bytes: privateKey,
+		})
+	}
+	return nil
 }
 
 func writeToFile(filename string, data []byte) error {
