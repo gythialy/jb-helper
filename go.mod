@@ -3,7 +3,7 @@ module github.com/gythialy/jb-helper
 go 1.23
 
 require (
-	github.com/fasthttp/router v1.5.2
+	github.com/fasthttp/router v1.5.3
 	github.com/valyala/fasthttp v1.57.0
 )
 
