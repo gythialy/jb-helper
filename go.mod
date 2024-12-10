@@ -4,7 +4,7 @@ go 1.23
 
 require (
 	github.com/fasthttp/router v1.5.3
-	github.com/valyala/fasthttp v1.57.0
+	github.com/valyala/fasthttp v1.58.0
 )
 
 require (
