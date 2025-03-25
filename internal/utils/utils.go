@@ -51,7 +51,9 @@ func SendRequest(url string, headers map[string]string, data interface{}) ([]byt
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		_ = Body.Close()
+	}(resp.Body)
 
 	result, err := io.ReadAll(resp.Body)
 	if err != nil {
