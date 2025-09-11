@@ -7,10 +7,7 @@ on:
 
 permissions:
   contents: read
-  # Optional: allow read access to pull request. Use with `only-new-issues` option.
   pull-requests: read
-env:
-  GOLANGCI_LINT_VERSION: v2.1
 
 jobs:
   detect-modules:
@@ -41,5 +38,5 @@ jobs:
       - name: golangci-lint ${{ matrix.modules }}
         uses: golangci/golangci-lint-action@v8
         with:
-          version: ${{ env.GOLANGCI_LINT_VERSION }}
+          version: latest
           working-directory: ${{ matrix.modules }}
