@@ -31,11 +31,6 @@ func LicenseHandler(ctx *fasthttp.RequestCtx) {
 		FallbackDate: date,
 		PaidUpTo:     date,
 		Extended:     false,
-	}, model.Product{
-		Code:         "PRAINBOWBRACKET",
-		FallbackDate: date,
-		PaidUpTo:     date,
-		Extended:     false,
 	})
 
 	// remove duplicate items
