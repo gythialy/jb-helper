@@ -1,6 +1,7 @@
 # Build stage
-FROM --platform=$BUILDPLATFORM golang:1.25-bookworm AS builder
+FROM --platform=$BUILDPLATFORM golang:1.25-trixie AS builder
 
+ENV GOPROXY=https://goproxy.io,direct
 # Install necessary build tools and Go
 RUN apt-get update && apt-get install -y \
     git \
@@ -17,7 +18,7 @@ ARG TARGETARCH
 RUN  make clean build
 
 # Runtime stage
-FROM debian:bookworm-slim AS runtime
+FROM debian:trixie-slim AS runtime
 
 WORKDIR /app
 

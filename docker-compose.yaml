@@ -1,21 +1,3 @@
-If you know what it is, just have fun !! Forked from [jb-active](https://github.com/run-bigpig/jb-active).
-
-## Usage
-
-### Run with Docker
-
-```bash
-docker run -it --rm \
-  --name jbhelper-dev \
-  -e BASE_PATH=/app \
-  -p 10800:10800 \
-  -v $PWD/cert:/app/cert \
-  ghcr.io/gythialy/jb-helper:latest
-```
-
-### Run with Docker Compose
-
-```yaml
 version: '3.8'
 
 services:
@@ -44,4 +26,3 @@ networks:
 volumes:
   cert_data:
     driver: local
-```
