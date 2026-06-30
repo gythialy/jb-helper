@@ -1,10 +1,10 @@
 module github.com/gythialy/jb-helper
 
-go 1.24.2
+go 1.25.0
 
 require (
 	github.com/fasthttp/router v1.5.4
-	github.com/valyala/fasthttp v1.71.0
+	github.com/valyala/fasthttp v1.72.0
 )
 
 require (
