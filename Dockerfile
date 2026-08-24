@@ -1,5 +1,5 @@
 # Build stage
-FROM --platform=$BUILDPLATFORM golang:1.26-trixie AS builder
+FROM --platform=$BUILDPLATFORM golang:1.27-trixie AS builder
 
 ENV GOPROXY=https://goproxy.io,direct
 # Install necessary build tools and Go
